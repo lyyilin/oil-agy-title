@@ -1,0 +1,11 @@
+{
+  "oil-agy-title": {
+    "Stop": [
+      {
+        "type": "command",
+        "command": "for p in /opt/homebrew/bin/python3 /usr/local/bin/python3 python3; do command -v \"$p\" >/dev/null 2>&1 && exec \"$p\" ./scripts/oil_agy_title.py hook; done",
+        "timeout": 10
+      }
+    ]
+  }
+}

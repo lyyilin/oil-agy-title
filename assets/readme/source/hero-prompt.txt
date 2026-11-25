@@ -1,0 +1,15 @@
+用途：GitHub README 首屏插画，作为透明底素材合成进浅色版式的右侧，左侧是标题文字。
+主要需求：表现“给一列杂乱的会话卡片贴上整齐的分类标签”，象征在后台自动整理并命名 Antigravity 侧边栏会话标题。
+
+主体（只画这两个角色和必要的标签道具，不加任何其他人物、动物、脸或多余道具）：
+- 极简火柴人主角：圆脑袋，细圆框眼镜，点状眼睛，简单的微笑，细线条四肢。他站在画面中偏左，身体微微朝向左侧的一列三张悬浮圆角会话卡片（类似侧边栏条目，用极简横线示意内容，绝不写任何文字或字母），正轻松愉快地把一枚小小的暖黄色/浅绿色圆角标签贴到最上面的卡片左侧。
+- 圆滚滚的暖黄色边境牧羊犬，开心趴坐或轻快小跑在主角右下侧，嘴里叼着一枚小小的空白圆角纸标签（带个小挂绳孔），朝主角摇尾巴帮忙递标签。
+- 画面上方点缀两颗简洁的暖黄色四角小星星。
+
+构图：两个角色和三张会话卡片整体紧凑居中，面向略偏左，右侧和四周留出充足空白，任何线条、网点、卡片或角色都不要碰到画布边缘。
+
+风格：professional manga/comic ink illustration. Clean confident ink outlines with varying line weights, thick for contours and thin for details, not wobbly or sketchy. Use classic circular halftone screentone dot patterns for gray and shadow areas. Color usage is extremely restrained: mostly black, white, and gray halftone; warm yellow on the dog, the small stars, and one small tag; muted light blue and soft sage green accents on the conversation cards and tag tabs. No 3D, no glossy gradients, no photorealism.
+
+背景：背景完全透明，干净的 alpha 通道。没有底色、地面、投影，也没有任何画面外的不透明像素。
+
+图中文字：画面里绝对不要出现任何文字、汉字、字母、数字、emoji、logo 或水印。

@@ -1,0 +1,14 @@
+{
+  "name": "oil-agy-title",
+  "displayName": "Oil AGY Title",
+  "version": "0.1.0",
+  "description": "在 Antigravity 桌面端每轮对话结束后，用轻量独立模型后台自动维护「emoji 对象｜目标」会话标题，保护手动标题并统计用量。",
+  "author": {
+    "name": "linzhihuang"
+  },
+  "suggestedPrompts": [
+    "检查 oil-agy-title 的运行状态、Hook 和模型配置",
+    "预览当前对话的新标题",
+    "固定当前对话标题或暂停自动命名"
+  ]
+}

@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1200" height="480" viewBox="0 0 1200 480">
+  <title>oil-agy-title：让 Antigravity 会话标题自动跟上讨论内容</title>
+  <desc>Antigravity 桌面端自动命名插件油画纸风格封面：左侧包含 Antigravity 图标、oil-agy-title 标题与核心特性说明，右侧为眼镜线条小人与暖黄色牧羊犬整理会话分类标签的插画。</desc>
+  <style>
+    .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  </style>
+  <rect width="1200" height="480" rx="24" fill="#F6F1E7"/>
+
+  <g id="title-block" class="sans">
+    <image id="antigravity-logo" href="antigravity-logo.png" x="64" y="68" width="46" height="40" preserveAspectRatio="xMidYMid meet"/>
+    <text x="124" y="99" font-size="24" font-weight="600" fill="#3A3833">Antigravity 插件</text>
+    <text x="60" y="206" font-size="82" font-weight="800" letter-spacing="-2.5" fill="#161514">oil-agy-title</text>
+    <text x="64" y="272" font-size="32" font-weight="700" fill="#1E1D1B">让侧边栏会话标题跟上讨论内容</text>
+    <rect id="highlight" x="60" y="318" width="474" height="18" rx="4" fill="#F5CF5A" opacity="0.55"/>
+    <text x="64" y="332" font-size="24" font-weight="600" fill="#3A3833">跟随用户语言 · 保护手动标题 · 后台自动运行</text>
+    <text x="64" y="414" class="mono" font-size="18" fill="#8C867A">非官方插件 · Stop Hook + Skill · MIT</text>
+  </g>
+
+  <image id="subject" href="hero-subject.png" x="644" y="36" width="512" height="408" preserveAspectRatio="xMidYMid meet"/>
+</svg>

@@ -1,0 +1,69 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="470" viewBox="0 0 1200 470" role="img" aria-labelledby="title desc">
+  <title id="title">Antigravity 侧边栏标题前后对比</title>
+  <desc>左侧展示 Antigravity 默认首轮生成的英文或笼统标题，右侧展示启用 oil-agy-title 后按「类别 emoji + 对象｜目标」结构与用户语言自动整理后的标题。</desc>
+  <style>
+    .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+    .emoji { font-family: "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji", sans-serif; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3F8F3A"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="470" rx="24" fill="#F6F1E7"/>
+
+  <g id="heading" class="sans">
+    <text x="56" y="66" font-size="36" font-weight="800" fill="#1E1D1B">侧边栏一眼看清每条会话在做什么</text>
+    <text x="56" y="102" font-size="20" fill="#6B665D">固定「类别 emoji + 对象｜目标」，语言跟随最近几轮用户的实际交流语言。</text>
+  </g>
+
+  <!-- Left: Before -->
+  <g id="before" transform="translate(56 130)" class="sans">
+    <rect width="470" height="270" rx="16" fill="#FFFFFF" stroke="#D9D1C2" stroke-width="2"/>
+    <text x="24" y="38" font-size="21" font-weight="700" fill="#8C867A">默认标题（首轮生成，聊偏也不会变）</text>
+    <line x1="24" y1="54" x2="446" y2="54" stroke="#EBE5D9" stroke-width="1.5"/>
+
+    <rect x="18" y="68" width="434" height="40" rx="8" fill="#F7F4EE"/>
+    <text x="32" y="95" font-size="21" fill="#787268">Debug Verification Code Expiry</text>
+
+    <rect x="18" y="118" width="434" height="40" rx="8" fill="#F7F4EE"/>
+    <text x="32" y="145" font-size="21" fill="#787268">Image Model Comparison Notes</text>
+
+    <rect x="18" y="168" width="434" height="40" rx="8" fill="#F7F4EE"/>
+    <text x="32" y="195" font-size="21" fill="#787268">Auth Token Issue Help</text>
+
+    <rect x="18" y="218" width="434" height="40" rx="8" fill="#F7F4EE"/>
+    <text x="32" y="245" font-size="21" fill="#787268">Login Form Spacing Discussion</text>
+  </g>
+
+  <!-- Center Arrow -->
+  <g id="transition">
+    <path d="M546 265 H614" fill="none" stroke="#3F8F3A" stroke-width="3.5" stroke-linecap="round" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Right: After -->
+  <g id="after" transform="translate(636 130)" class="sans">
+    <rect width="508" height="270" rx="16" fill="#FFFFFF" stroke="#3F8F3A" stroke-width="2.5"/>
+    <text x="24" y="38" font-size="21" font-weight="700" fill="#2C6B28">oil-agy-title（按对象与目标实时维护）</text>
+    <line x1="24" y1="54" x2="484" y2="54" stroke="#E0ECD8" stroke-width="1.5"/>
+
+    <rect x="18" y="68" width="472" height="40" rx="8" fill="#E8F3E4"/>
+    <text x="30" y="96" class="emoji" font-size="23">🧩</text>
+    <text x="68" y="95" font-size="22" font-weight="600" fill="#1E1D1B">邮箱验证码｜过期排查</text>
+
+    <rect x="18" y="118" width="472" height="40" rx="8" fill="#EDF2FA"/>
+    <text x="30" y="146" class="emoji" font-size="23">🎬</text>
+    <text x="68" y="145" font-size="22" font-weight="600" fill="#1E1D1B">图像模型对比｜视频策划</text>
+
+    <rect x="18" y="168" width="472" height="40" rx="8" fill="#F3EEF8"/>
+    <text x="30" y="196" class="emoji" font-size="23">🧩</text>
+    <text x="68" y="195" font-size="22" font-weight="600" fill="#1E1D1B">Email verification｜Fix expiry</text>
+
+    <rect x="18" y="218" width="472" height="40" rx="8" fill="#FBF1E3"/>
+    <text x="30" y="246" class="emoji" font-size="23">🎨</text>
+    <text x="68" y="245" font-size="22" font-weight="600" fill="#1E1D1B">登录表单｜布局优化</text>
+  </g>
+
+  <text x="56" y="438" class="sans" font-size="19" fill="#6B665D">中文需求出中文标题，英文需求出英文标题 · 稳定标题在简单确认时直接保留，不反复改名</text>
+</svg>

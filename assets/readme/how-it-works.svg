@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="600" viewBox="0 0 1200 600" role="img" aria-labelledby="title desc">
+  <title id="title">oil-agy-title 后台命名流程</title>
+  <desc>每轮对话结束时 Stop Hook 在几十毫秒内派生独立后台进程并立刻返回，读取最近 5 轮用户需求与最终回答，交由独立轻量模型判断是否更新标题，优先通过 ConversationService 热更新，无本地服务环境变量时自动原子写入 annotations/*.pbtxt。</desc>
+  <style>
+    .sans { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 L10 5 L0 10 z" fill="#2A2824"/>
+    </marker>
+  </defs>
+
+  <rect width="1200" height="600" rx="24" fill="#F6F1E7"/>
+
+  <g id="heading" class="sans">
+    <text x="56" y="72" font-size="38" font-weight="800" fill="#1E1D1B">对话之外，后台怎么维护标题</text>
+    <text x="56" y="110" font-size="20" fill="#6B665D">Hook 派生子进程后立即返回 <tspan class="mono" fill="#1E1D1B">{}</tspan>，不卡主界面，命名消息也不写入原对话。</text>
+  </g>
+
+  <!-- Flow Connectors -->
+  <g id="connectors" fill="none" stroke="#2A2824" stroke-width="2.5">
+    <path d="M276 265 H314" marker-end="url(#arrow)"/>
+    <path d="M538 265 H576" marker-end="url(#arrow)"/>
+    <path d="M812 265 H842 V210 H864" marker-end="url(#arrow)"/>
+    <path d="M812 265 H842 V320 H864" marker-end="url(#arrow)"/>
+  </g>
+
+  <!-- Step 1 -->
+  <g id="step-hook" class="sans">
+    <rect x="56" y="195" width="220" height="140" rx="14" fill="#FFFFFF" stroke="#1E1D1B" stroke-width="2.5"/>
+    <text x="166" y="246" text-anchor="middle" font-size="25" font-weight="800" fill="#1E1D1B">1. Stop Hook</text>
+    <text x="166" y="280" text-anchor="middle" font-size="19" fill="#6B665D">~60ms 派生后台</text>
+    <text x="166" y="308" text-anchor="middle" font-size="19" fill="#6B665D">立即返回不阻塞</text>
+  </g>
+
+  <!-- Step 2 -->
+  <g id="step-read" class="sans">
+    <rect x="322" y="195" width="216" height="140" rx="14" fill="#FFFFFF" stroke="#1E1D1B" stroke-width="2.5"/>
+    <text x="430" y="246" text-anchor="middle" font-size="25" font-weight="800" fill="#1E1D1B">2. 读取摘录</text>
+    <text x="430" y="280" text-anchor="middle" class="mono" font-size="18" fill="#3A3833">transcript.jsonl</text>
+    <text x="430" y="308" text-anchor="middle" font-size="19" fill="#6B665D">最近 5 轮有效对话</text>
+  </g>
+
+  <!-- Step 3 -->
+  <g id="step-model" class="sans">
+    <rect x="584" y="195" width="228" height="140" rx="14" fill="#FFFFFF" stroke="#1E1D1B" stroke-width="2.5"/>
+    <text x="698" y="246" text-anchor="middle" font-size="25" font-weight="800" fill="#1E1D1B">3. 独立轻量模型</text>
+    <text x="698" y="280" text-anchor="middle" class="mono" font-size="17" fill="#3A3833">gemini-3.8-flash-low</text>
+    <text x="698" y="308" text-anchor="middle" font-size="19" fill="#6B665D">或外部 OpenAI 兼容 API</text>
+  </g>
+
+  <!-- Step 4A: Hot update -->
+  <g id="write-rpc" class="sans">
+    <rect x="872" y="158" width="272" height="100" rx="14" fill="#E4F1DD" stroke="#3F8F3A" stroke-width="2.5"/>
+    <text x="894" y="198" font-size="22" font-weight="800" fill="#2C6B28">优先：官方接口热更新</text>
+    <text x="894" y="232" class="mono" font-size="18" fill="#2A2824">UpdateConversation</text>
+  </g>
+
+  <!-- Step 4B: Fallback -->
+  <g id="write-pbtxt" class="sans">
+    <rect x="872" y="274" width="272" height="100" rx="14" fill="#FBE5CC" stroke="#D9822B" stroke-width="2.5"/>
+    <text x="894" y="314" font-size="22" font-weight="800" fill="#8F4A0C">兜底：原子写注释文件</text>
+    <text x="894" y="348" class="mono" font-size="18" fill="#2A2824">annotations/*.pbtxt</text>
+  </g>
+
+  <!-- Guardrails Footer -->
+  <line x1="56" y1="426" x2="1144" y2="426" stroke="#DDD5C6" stroke-width="2"/>
+  <g id="guardrails" class="sans">
+    <g transform="translate(56 452)">
+      <circle cx="15" cy="22" r="15" fill="#3F8F3A"/><text x="15" y="28" text-anchor="middle" font-size="18" font-weight="800" fill="#FFFFFF">1</text>
+      <text x="40" y="30" font-size="22" font-weight="800" fill="#1E1D1B">跟随用户语言</text>
+      <text x="0" y="66" font-size="19" fill="#6B665D">按近期用户需求选语言，</text>
+      <text x="0" y="94" font-size="19" fill="#6B665D">不被代码和旧标题带偏</text>
+    </g>
+    <g transform="translate(332 452)">
+      <circle cx="15" cy="22" r="15" fill="#3F8F3A"/><text x="15" y="28" text-anchor="middle" font-size="18" font-weight="800" fill="#FFFFFF">2</text>
+      <text x="40" y="30" font-size="22" font-weight="800" fill="#1E1D1B">保护手动标题</text>
+      <text x="0" y="66" font-size="19" fill="#6B665D">检测到你手动改名后</text>
+      <text x="0" y="94" font-size="19" fill="#6B665D">自动锁定，不再覆写</text>
+    </g>
+    <g transform="translate(608 452)">
+      <circle cx="15" cy="22" r="15" fill="#3F8F3A"/><text x="15" y="28" text-anchor="middle" font-size="18" font-weight="800" fill="#FFFFFF">3</text>
+      <text x="40" y="30" font-size="22" font-weight="800" fill="#1E1D1B">省量防重跑</text>
+      <text x="0" y="66" font-size="19" fill="#6B665D">纯确认跳过、同轮防重跑、</text>
+      <text x="0" y="94" font-size="19" fill="#6B665D">自动忽略子 Agent 会话</text>
+    </g>
+    <g transform="translate(884 452)">
+      <circle cx="15" cy="22" r="15" fill="#3F8F3A"/><text x="15" y="28" text-anchor="middle" font-size="18" font-weight="800" fill="#FFFFFF">4</text>
+      <text x="40" y="30" font-size="22" font-weight="800" fill="#1E1D1B">写前二次核验</text>
+      <text x="0" y="66" font-size="19" fill="#6B665D">生成期间有新消息自动丢弃，</text>
+      <text x="0" y="94" font-size="19" fill="#6B665D">同项目防重名、防 Hook 递归</text>
+    </g>
+  </g>
+</svg>
