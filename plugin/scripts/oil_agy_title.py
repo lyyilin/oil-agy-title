@@ -34,11 +34,8 @@ from usage_ledger import usage_report
 PLUGIN_ROOT = SCRIPT_DIR.parent
 DEFAULTS = {
     "enabled": True,
-    "provider": "agy",
     "model": "gemini-3.8-flash-low",
     "agy_bin": None,
-    "api_base_url": "",
-    "api_key_env": "",
     "recent_turns": 5,
     "max_context_chars": 14000,
     "model_timeout_seconds": 60,
@@ -86,8 +83,6 @@ def load_config(root: Path) -> dict:
         raise ValueError("enabled 必须是布尔值")
     if not isinstance(config["allow_pbtxt_fallback"], bool):
         raise ValueError("allow_pbtxt_fallback 必须是布尔值")
-    if config["provider"] not in ("agy", "openai_compatible"):
-        raise ValueError("provider 必须是 agy 或 openai_compatible")
     for key, lower, upper in (
         ("recent_turns", 3, 8),
         ("max_context_chars", 3000, 20000),
@@ -556,6 +551,8 @@ def dispatch_hook(root: Path, config: dict) -> None:
 
 
 def doctor(backend: AntigravityBackend, root: Path, config: dict, conversation_id: str | None = None) -> dict:
+    binary = find_agy(config.get("agy_bin"))
+    ver = subprocess.run([binary, "--help"], capture_output=True, text=True, encoding="utf-8", timeout=10)
     output: dict = {
         "python": sys.version.split()[0],
         "plugin_root": str(PLUGIN_ROOT),
@@ -564,16 +561,9 @@ def doctor(backend: AntigravityBackend, root: Path, config: dict, conversation_i
         "config": config,
         "rpc_env_present": backend.has_rpc,
         "hooks_file_exists": (PLUGIN_ROOT / "hooks.json").is_file(),
+        "agy_bin": binary,
+        "agy_ok": ver.returncode == 0,
     }
-    if config["provider"] == "agy":
-        binary = find_agy(config.get("agy_bin"))
-        ver = subprocess.run([binary, "--help"], capture_output=True, text=True, encoding="utf-8", timeout=10)
-        output["agy_bin"] = binary
-        output["agy_ok"] = ver.returncode == 0
-    else:
-        env_name = config.get("api_key_env") or ""
-        output["api_base_url"] = config.get("api_base_url") or ""
-        output["api_key_env_set"] = bool(env_name and os.environ.get(env_name))
     if conversation_id:
         cid = valid_id(conversation_id)
         conv = backend.read(cid)
@@ -611,12 +601,9 @@ def main() -> int:
     sub.add_parser("pause", help="暂停自动命名")
     sub.add_parser("resume", help="恢复自动命名")
 
-    p = sub.add_parser("configure", help="配置命名模型、提供方或开关")
-    p.add_argument("--provider", choices=("agy", "openai_compatible"))
+    p = sub.add_parser("configure", help="配置内置命名模型、agy 路径或回退开关")
     p.add_argument("--model")
     p.add_argument("--agy-bin")
-    p.add_argument("--api-base-url")
-    p.add_argument("--api-key-env")
     p.add_argument("--allow-pbtxt-fallback", action=argparse.BooleanOptionalAction, default=None)
 
     for name in ("rename", "lock", "unlock"):
@@ -664,16 +651,10 @@ def main() -> int:
             if args.command in ("pause", "resume"):
                 changes["enabled"] = args.command == "resume"
             else:
-                if args.provider:
-                    changes["provider"] = args.provider
                 if args.model:
                     changes["model"] = args.model
                 if args.agy_bin:
                     changes["agy_bin"] = find_agy(args.agy_bin)
-                if args.api_base_url is not None:
-                    changes["api_base_url"] = args.api_base_url
-                if args.api_key_env is not None:
-                    changes["api_key_env"] = args.api_key_env
                 if args.allow_pbtxt_fallback is not None:
                     changes["allow_pbtxt_fallback"] = args.allow_pbtxt_fallback
             atomic_json(config_path, changes)

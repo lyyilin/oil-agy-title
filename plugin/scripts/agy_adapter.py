@@ -490,65 +490,6 @@ def _call_agy_model(root: Path, conversation_id: str, config: dict, context: dic
             attempt.finish(status, usage)
 
 
-def _call_openai_compatible(root: Path, conversation_id: str, config: dict, context: dict,
-                            policy_path: Path, remaining: float) -> tuple[dict, dict]:
-    base_url = (config.get("api_base_url") or "").rstrip("/")
-    api_key_env = (config.get("api_key_env") or "").strip()
-    api_key = os.environ.get(api_key_env, "").strip() if api_key_env else ""
-    if not base_url:
-        raise BackendError("provider=openai_compatible 需要配置 api_base_url")
-    if not api_key:
-        raise BackendError(f"未在环境变量 {api_key_env or '<未配置>'} 中找到 API Key")
-    endpoint = base_url if base_url.endswith("/chat/completions") else f"{base_url}/chat/completions"
-    instructions = policy_path.read_text(encoding="utf-8").strip()
-    payload = {
-        "model": config["model"],
-        "temperature": 0.1,
-        "response_format": {"type": "json_object"},
-        "messages": [
-            {"role": "system", "content": instructions},
-            {"role": "user", "content": json.dumps(context, ensure_ascii=False)},
-        ],
-    }
-    req = urllib.request.Request(
-        endpoint,
-        data=json.dumps(payload, ensure_ascii=False).encode("utf-8"),
-        method="POST",
-        headers={
-            "Content-Type": "application/json",
-            "Authorization": f"Bearer {api_key}",
-            "User-Agent": "oil-agy-title/0.1",
-        },
-    )
-    attempt = record_attempt(root, "naming", conversation_id, config)
-    usage: dict = {}
-    status = "interrupted"
-    try:
-        with urllib.request.urlopen(req, timeout=max(5.0, remaining)) as resp:
-            data = json.loads(resp.read().decode("utf-8", errors="replace"))
-        raw_usage = data.get("usage") or {}
-        if isinstance(raw_usage, dict):
-            usage = {
-                "input_tokens": int(raw_usage.get("prompt_tokens") or 0),
-                "output_tokens": int(raw_usage.get("completion_tokens") or 0),
-                "total_tokens": int(raw_usage.get("total_tokens") or 0),
-            }
-        choices = data.get("choices") or []
-        content = ((choices[0] or {}).get("message") or {}).get("content") if choices else ""
-        result = _extract_json_object(content or "")
-        status = "completed"
-        return result, usage
-    except urllib.error.HTTPError as exc:
-        status = "http_error"
-        detail = exc.read().decode("utf-8", errors="replace")[:200]
-        raise BackendError(f"API 请求失败 HTTP {exc.code}: {detail}") from exc
-    except (OSError, ValueError) as exc:
-        status = "network_error"
-        raise BackendError(f"API 请求失败：{exc}") from exc
-    finally:
-        attempt.finish(status, usage)
-
-
 def _generate_once(root: Path, conversation_id: str, config: dict, context: dict,
                    plugin_root: Path, *, before_model=None, remaining: float = 60.0) -> tuple[dict, dict]:
     trivial = {"", "你好", "您好", "hi", "hello", "嗨", "谢谢", "好的", "好", "ok", "收到", "继续", "嗯"}
@@ -567,13 +508,7 @@ def _generate_once(root: Path, conversation_id: str, config: dict, context: dict
     if remaining <= 0:
         raise BackendError("状态复核已耗尽本次模型时间预算")
     policy_path = plugin_root / "prompts" / "naming.md"
-    provider = config.get("provider", "agy")
-    if provider == "openai_compatible":
-        result, usage = _call_openai_compatible(root, conversation_id, config, context, policy_path, remaining)
-    elif provider == "agy":
-        result, usage = _call_agy_model(root, conversation_id, config, context, policy_path, remaining)
-    else:
-        raise BackendError(f"不支持的 provider：{provider}")
+    result, usage = _call_agy_model(root, conversation_id, config, context, policy_path, remaining)
     return normalize_project_prefix(result, context), usage
 
 

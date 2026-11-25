@@ -179,6 +179,38 @@ class OilAgyTitleTests(unittest.TestCase):
             self.assertEqual(r2.get("skip_reason"), "same_user_turn")
             self.assertEqual(len(calls), 1)
 
+    def test_normalize_project_prefix(self):
+        c1 = agy_adapter.normalize_project_prefix(
+            {"action": "rename", "title": "🧩 Kite LMS 邮箱验证｜修复过期", "reason": "ok"},
+            {"project_hint": "kite-lms"},
+        )
+        self.assertEqual(c1["title"], "🧩 邮箱验证｜修复过期")
+        c2 = agy_adapter.normalize_project_prefix(
+            {"action": "rename", "title": "🧩 Kite 与 Maple｜校验同步", "reason": "ok"},
+            {"project_hint": "kite"},
+        )
+        self.assertEqual(c2["title"], "🧩 Kite 与 Maple｜校验同步")
+
+    def test_run_py_entrypoint_status_configure_and_preserve_unknown_keys(self):
+        import os
+        import subprocess
+        run_py = Path(__file__).resolve().parents[1] / "skills" / "oil-agy-title" / "scripts" / "run.py"
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "config.json").write_text(json.dumps({"custom_flag": "keep_me"}), encoding="utf-8")
+            env = {**os.environ, "OIL_AGY_TITLE_DATA": str(root)}
+            p1 = subprocess.run([sys.executable, str(run_py), "configure", "--model", "gemini-4-argon-low"],
+                                capture_output=True, text=True, encoding="utf-8", env=env, check=True)
+            cfg = json.loads(p1.stdout)
+            self.assertEqual(cfg["model"], "gemini-4-argon-low")
+            self.assertEqual(cfg["custom_flag"], "keep_me")
+            p2 = subprocess.run([sys.executable, str(run_py), "pause"],
+                                capture_output=True, text=True, encoding="utf-8", env=env, check=True)
+            self.assertFalse(json.loads(p2.stdout)["enabled"])
+            p3 = subprocess.run([sys.executable, str(run_py), "status"],
+                                capture_output=True, text=True, encoding="utf-8", env=env, check=True)
+            self.assertEqual(json.loads(p3.stdout)["config"]["model"], "gemini-4-argon-low")
+
 
 if __name__ == "__main__":
     unittest.main()

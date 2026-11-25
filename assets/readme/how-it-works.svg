@@ -47,7 +47,7 @@
     <rect x="584" y="195" width="228" height="140" rx="14" fill="#FFFFFF" stroke="#1E1D1B" stroke-width="2.5"/>
     <text x="698" y="246" text-anchor="middle" font-size="25" font-weight="800" fill="#1E1D1B">3. 独立轻量模型</text>
     <text x="698" y="280" text-anchor="middle" class="mono" font-size="17" fill="#3A3833">gemini-3.8-flash-low</text>
-    <text x="698" y="308" text-anchor="middle" font-size="19" fill="#6B665D">或外部 OpenAI 兼容 API</text>
+    <text x="698" y="308" text-anchor="middle" font-size="18" fill="#6B665D">复用登录 · 零额外 Key</text>
   </g>
 
   <!-- Step 4A: Hot update -->
